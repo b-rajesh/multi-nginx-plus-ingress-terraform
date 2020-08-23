@@ -1,3 +1,13 @@
+/*
+resource "null_resource" "build-kic" {
+depends_on = 
+  provisioner "local-exec" {
+    command = "docker rmi ${var.ingress_controller_prefix}/${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
+  }
+  provisioner "local-exec" {
+    command = "docker rmi ${var.ingress_controller_prefix}/app-protect-${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
+  }
+} */
 module "prometheus" {
   source = "./modules/prometheus-grafana"
 

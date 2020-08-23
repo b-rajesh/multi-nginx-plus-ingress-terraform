@@ -49,7 +49,13 @@ resource "google_container_cluster" "primary" {
     command = "docker push ${var.ingress_controller_prefix}/${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
   }
   provisioner "local-exec" {
+    command = "docker push ${var.ingress_controller_prefix}/app-protect-${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
+  }
+  provisioner "local-exec" {
     command = "docker rmi ${var.ingress_controller_prefix}/${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
+  }
+  provisioner "local-exec" {
+    command = "docker rmi ${var.ingress_controller_prefix}/app-protect-${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
   }
 }
 

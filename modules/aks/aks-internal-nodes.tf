@@ -36,7 +36,13 @@ resource "null_resource" "push-image-to-acr" {
     command = "docker push ${azurerm_container_registry.nginx-ingress-acr.login_server}/${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
   }
   provisioner "local-exec" {
-    command = "docker rmi ${azurerm_container_registry.nginx-ingress-acr.login_server}/${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
+    command = "docker push ${azurerm_container_registry.nginx-ingress-acr.login_server}/app-protect-${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
+  }
+  provisioner "local-exec" {
+    command = "docker rmi ${var.ingress_controller_prefix}/${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
+  }
+  provisioner "local-exec" {
+    command = "docker rmi ${var.ingress_controller_prefix}/app-protect-${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
   }
 }
 
