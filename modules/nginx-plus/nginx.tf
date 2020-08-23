@@ -108,7 +108,8 @@ resource "kubernetes_daemonset" "nginx-ingress-deployment" {
             "-enable-prometheus-metrics",
             "-enable-snippets",
             "-ingress-class=edgeproxy",
-            "-prometheus-metrics-listen-port=9500"
+            "-prometheus-metrics-listen-port=9500",
+            "enable-app-protect"
             //"-v=3" # Enables extensive logging. Useful for troubleshooting.
           ])
         }
