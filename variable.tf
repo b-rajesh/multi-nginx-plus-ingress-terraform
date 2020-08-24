@@ -110,3 +110,5 @@ variable "aks_ingress_controller_prefix" {
 variable "ingress_conroller_version" { default = "1.7.2" }
 
 variable "ingress_controller_image_name" { default = "nginx-plus-ingress" }
+
+variable "ingress_controller_app_protect_image_name" {}
