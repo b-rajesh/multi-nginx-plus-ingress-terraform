@@ -36,6 +36,8 @@ module "nginx-plus-ingress-deployment" {
   tls_key                   = "${file("default.key")}"
   name_of_ingress_container = var.name_of_ingress_container
   image                     = "${var.aks_ingress_controller_prefix}.azurecr.io/${var.ingress_controller_image_name}:${var.ingress_conroller_version}"
+  name_of_app_protect_ingress_container = var.ingress_controller_app_protect_image_name
+  nginx_app_protect_image   = "${var.aks_ingress_controller_prefix}.azurecr.io/${var.ingress_controller_app_protect_image_name}:${var.ingress_conroller_version}"
 
   load_config_file       = false
   host                   = module.aks.host
@@ -57,7 +59,8 @@ module "aks" {
   ingress_conroller_version     = var.ingress_conroller_version
   ingress_controller_prefix     = var.aks_ingress_controller_prefix
   ingress_controller_image_name = var.ingress_controller_image_name
-
+  name_of_app_protect_ingress_container = var.ingress_controller_app_protect_image_name 
+  
   prefix                            = var.prefix
   default_node_pool_count           = var.default_node_pool_count
   application_node_pool_count       = var.application_node_pool_count
@@ -73,4 +76,5 @@ module "kic" {
   ingress_conroller_version     = var.ingress_conroller_version
   ingress_controller_prefix     = "${var.aks_ingress_controller_prefix}.azurecr.io"
   ingress_controller_image_name = var.ingress_controller_image_name
+  name_of_app_protect_ingress_container = var.ingress_controller_app_protect_image_name  
 }

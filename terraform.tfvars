@@ -2,10 +2,10 @@
 environment                         = "nginx-test"
 prefix                              =  //keep it within 3-5 letters as the code is also generating unique petname along with it.
 # GKE specific variables
-project_id                          = "Your-GCP-Project-ID"
+project_id                          = "You-GCP-Project-ID"
 tag_1_node_pool                     = "created-for-nginx-by-???"             //some meaningful tags
 tag_2_node_pool                     = "gke-node-pool-for-nginx-plus-ingress" //some meaningful tags
-unique_user_id                      =                        //your username would be unique
+unique_user_id                      =                         //your username would be unique
 gke_cluster_name                    = "gke-cluster"
 
 #If you specify a zone, the cluster will be a zonal cluster with a single cluster master. If you specify a region the cluster will be a regional cluster with multiple masters spread across zones in the region
@@ -29,6 +29,7 @@ name_of_ingress_container                   = "nginx-plus-ingress-container-1-8-
 ingress_controller_image_name               = "nginx-plus-ingress"
 ingress_conroller_version                   = "1.8.1"
 ingress_controller_app_protect_image_name   = "app-protect-nginx-plus-ingress"
+name_of_app_protect_ingress_container       = "nginx-plus-app-protect-container-1-8-1"
 
 # Variables for Testing APIs
 weather-api-image                   = "brajesh79/weather-api:v1"

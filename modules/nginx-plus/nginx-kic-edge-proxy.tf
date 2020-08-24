@@ -64,8 +64,8 @@ resource "kubernetes_daemonset" "nginx-ingress-deployment" {
         }
         service_account_name = kubernetes_service_account.nginx-plus-ingress-sa.metadata[0].name
         container {
-          image = var.image 
-          name  = var.name_of_ingress_container
+          image = var.nginx_app_protect_image 
+          name  = var.name_of_app_protect_ingress_container
           port {
             container_port = 80
           }

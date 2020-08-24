@@ -63,7 +63,7 @@ resource "kubernetes_daemonset" "nginx_ingress_micro_proxy_daemonset" {
         service_account_name = kubernetes_service_account.nginx_kic_micro_proxy_sa.metadata[0].name
         container {
           image = var.image 
-          name  = "nginx-kic-micro-proxy-1-8-1"
+          name  = var.name_of_ingress_container
           port {
             container_port = 80
           }
