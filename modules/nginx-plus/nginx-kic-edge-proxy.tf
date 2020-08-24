@@ -100,7 +100,7 @@ resource "kubernetes_daemonset" "nginx-ingress-deployment" {
           }
           args = concat([
             "-nginx-plus",
-            "-nginx-configmaps=${kubernetes_namespace.nginx-plus-ingress-ns.metadata[0].name}/${kubernetes_config_map.nginx_ingress_server_config_map.metadata.0.name}",
+            "-nginx-configmaps=${kubernetes_namespace.nginx-plus-ingress-ns.metadata[0].name}/${kubernetes_config_map.edge_proxy_server_config_map.metadata.0.name}",
             "-default-server-tls-secret=${kubernetes_namespace.nginx-plus-ingress-ns.metadata[0].name}/${kubernetes_secret.nginx-plus-ingress-default-secret.metadata.0.name}",
             "-health-status",
             "-nginx-status",

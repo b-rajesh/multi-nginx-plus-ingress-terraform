@@ -1,5 +1,5 @@
 resource "kubernetes_service" "weather-service" {
-  depends_on = [kubernetes_namespace.microservice-namespace]
+  depends_on = [var.depends_on_nginx_plus]
   metadata {
     name      = "weather-service"
     namespace = "microservice-namespace"
@@ -19,7 +19,7 @@ resource "kubernetes_service" "weather-service" {
 }
 
 resource "kubernetes_deployment" "weather-api-deployment" {
-  depends_on = [kubernetes_namespace.microservice-namespace]
+  depends_on = [var.depends_on_nginx_plus]
   metadata {
     name = "weather-api-deployment"
     labels = {

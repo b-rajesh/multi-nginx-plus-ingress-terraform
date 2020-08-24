@@ -3,12 +3,11 @@
 apiVersion: k8s.nginx.org/v1
 kind: VirtualServer
 metadata:
-  name: weather-api-vs
-  namespace: nginx-plus-ingress-ns
+  name: microproxy-apis-virtual-route
+  namespace: microservice-namespace
 spec:
-  ingressClassName: edgeproxy
+  ingressClassName: microproxy
   http-snippets: |
-    limit_req_zone $binary_remote_addr zone=ip_address:10m rate=3r/m;
     gunzip on; # Decompress IdP responses if necessary
     auth_jwt_claim_set $idp_issuer          iss;
     auth_jwt_claim_set $customer_id         sub;
@@ -29,9 +28,6 @@ spec:
         default                                                          0;
     }
   host: localhost
-  policies:
-    - name: allow-anyhost
-      namespace: nginx-plus-ingress-ns
   routes:
   - path: /weather
     location-snippets: |

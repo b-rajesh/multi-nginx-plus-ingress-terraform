@@ -24,6 +24,21 @@ resource "kubernetes_namespace" "nginx-plus-ingress-ns" {
   depends_on = [var.depends_on_kube]
 }
 
+resource "kubernetes_namespace" "microservice-namespace" {
+  depends_on = [var.depends_on_kube]
+  metadata {
+    annotations = {
+      name = "microservice-namespace"
+    }
+
+    labels = {
+      namespace = "microservice-namespace"
+    }
+
+    name = "microservice-namespace"
+  }
+}
+
 resource "kubernetes_service_account" "nginx-plus-ingress-sa" {
   metadata {
     name      = "nginx-plus-ingress-service-account"
@@ -54,21 +69,5 @@ resource "kubernetes_secret" "nginx-plus-ingress-default-secret" {
   depends_on = [var.depends_on_kube]
 }
 
-resource "kubernetes_config_map" "nginx-ingress-config-map" {
-  metadata {
-    name      = "nginx-ingress-config-map"
-    namespace = kubernetes_namespace.nginx-plus-ingress-ns.metadata[0].name
-  }
-
-  data = {
-    worker-processes     = "24"
-    worker-connections   = "100000"
-    worker-rlimit-nofile = "102400"
-    worker-cpu-affinity  = "auto 111111111111111111111111"
-    keepalive            = "200"
-    //main-template        = "${file("${path.module}/main_template_file.conf")}"
-  }
-
-}
 
 

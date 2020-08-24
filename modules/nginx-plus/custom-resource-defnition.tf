@@ -2,9 +2,22 @@
  # This will be replaced one Terraform has https://github.com/hashicorp/terraform-provider-kubernetes-alpha as GA
  # The yaml files inside crd folder should be kept up to date, retrieve it from here https://github.com/nginxinc/kubernetes-ingress/tree/master/deployments/common
 resource "null_resource" "cluster" {
-
+  depends_on = [kubernetes_config_map.nginx-ingress-config-map, kubernetes_config_map.micro_proxy_server_config_map, kubernetes_namespace.nginx-plus-ingress-ns]
   provisioner "local-exec" {
     command = "kubectl apply -f ${path.module}/crd/"
   }
-   depends_on = [kubernetes_config_map.nginx-ingress-config-map, kubernetes_config_map.nginx_ingress_server_config_map]
+}
+
+resource "null_resource" "create_virtual_route_in_edge_proxy" {
+  depends_on = [null_resource.cluster, kubernetes_namespace.nginx-plus-ingress-ns]
+  provisioner "local-exec" {
+    command = "kubectl apply -f ${path.module}/edgeproxy_virtualroute_crd/ --validate=false"
+  }
+}
+
+resource "null_resource" "create_virtual_route_in_micro_proxy" {
+  depends_on = [null_resource.create_virtual_route_in_edge_proxy, kubernetes_config_map.micro_proxy_server_config_map,kubernetes_namespace.microservice-namespace]
+  provisioner "local-exec" {
+    command = "kubectl apply -f  ${path.module}/microproxy_virtualroute_crd/ --validate=false"
+  }
 }

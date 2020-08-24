@@ -98,6 +98,7 @@ resource "kubernetes_daemonset" "nginx_ingress_micro_proxy_daemonset" {
           }
           args = concat([
             "-nginx-plus",
+            "-nginx-configmaps=${kubernetes_namespace.nginx-plus-ingress-ns.metadata[0].name}/${kubernetes_config_map.micro_proxy_server_config_map.metadata.0.name}",
             "-default-server-tls-secret=${kubernetes_namespace.microservice-namespace.metadata[0].name}/${kubernetes_secret.nginx_kic_default_secret.metadata.0.name}",
             "-health-status",
             "-nginx-status",

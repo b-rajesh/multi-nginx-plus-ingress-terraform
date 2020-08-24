@@ -5,7 +5,7 @@ prefix                              =  //keep it within 3-5 letters as the code 
 project_id                          = "Your-GCP-Project-ID"
 tag_1_node_pool                     = "created-for-nginx-by-???"             //some meaningful tags
 tag_2_node_pool                     = "gke-node-pool-for-nginx-plus-ingress" //some meaningful tags
-unique_user_id                      =                         //your username would be unique
+unique_user_id                      =                        //your username would be unique
 gke_cluster_name                    = "gke-cluster"
 
 #If you specify a zone, the cluster will be a zonal cluster with a single cluster master. If you specify a region the cluster will be a regional cluster with multiple masters spread across zones in the region

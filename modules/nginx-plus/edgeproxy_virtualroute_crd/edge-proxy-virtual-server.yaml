@@ -1,0 +1,73 @@
+# This CRD support for Terraform is still in beta - https://www.hashicorp.com/blog/deploy-any-resource-with-the-new-kubernetes-provider-for-hashicorp-terraform/ - hence we still stick to YAML execution through kubectl
+
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: edge-proxy-ingress-controller
+  namespace: nginx-plus-ingress-ns
+spec:
+  ingressClassName: edgeproxy
+  http-snippets: |
+    limit_req_zone $binary_remote_addr zone=ip_address:10m rate=3r/m;
+  host: localhost
+  policies:
+    - name: allow-anyhost
+      namespace: nginx-plus-ingress-ns
+  routes:
+  - path: /weather
+    route: microservice-namespace/micro-proxy-weather-vsr
+  - path: /helloworld
+    route: microservice-namespace/micro-proxy-echo-vsr
+---
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServerRoute
+metadata:
+  name: micro-proxy-weather-vsr
+  namespace: microservice-namespace
+spec:
+  host: localhost
+  upstreams:
+  - name: micro-proxy-weather-upstream 
+    service: nginxplus-microservice-proxy
+    port: 8080
+    max-fails: 1
+    max-conns: 32
+    keepalive: 32
+    connect-timeout: 30s
+    read-timeout: 30s
+    send-timeout: 30s
+    next-upstream: "error timeout non_idempotent"
+    next-upstream-timeout: 5s
+    next-upstream-tries: 10
+    client-max-body-size: 1m
+  subroutes:
+  - path: /weather
+    action:
+      pass: micro-proxy-weather-upstream 
+---
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServerRoute
+metadata:
+  name: micro-proxy-echo-vsr
+  namespace: microservice-namespace
+spec:
+  host: localhost
+  upstreams:
+  - name: micro-proxy-echo-upstream 
+    service: nginxplus-microservice-proxy
+    port: 8080
+    max-fails: 1
+    max-conns: 32
+    keepalive: 32
+    connect-timeout: 30s
+    read-timeout: 30s
+    send-timeout: 30s
+    next-upstream: "error timeout non_idempotent"
+    next-upstream-timeout: 5s
+    next-upstream-tries: 10
+    client-max-body-size: 1m
+  subroutes:
+  - path: /helloworld
+    action:
+      pass: micro-proxy-echo-upstream
+---
