@@ -28,82 +28,59 @@ spec:
         default                                                          0;
     }
   host: localhost
+  upstreams:
+    - name: weather-service-upstream 
+      service: weather-service
+      port: 3000
+      lb-method: round_robin
+      max-fails: 1
+      max-conns: 32
+      keepalive: 32
+      connect-timeout: 30s
+      read-timeout: 30s
+      send-timeout: 30s
+      next-upstream: "error timeout non_idempotent"
+      next-upstream-timeout: 5s
+      next-upstream-tries: 10
+      client-max-body-size: 1m
+    - name: echo-service-upstream 
+      service: echo-service
+      port: 8080
+      lb-method: round_robin
+      max-fails: 1
+      max-conns: 32
+      keepalive: 32
+      connect-timeout: 30s
+      read-timeout: 30s
+      send-timeout: 30s
+      next-upstream: "error timeout non_idempotent"
+      next-upstream-timeout: 5s
+      next-upstream-tries: 10
+      client-max-body-size: 1m
   routes:
   - path: /weather
     location-snippets: |
       if ( $isAdmin = 0 ) {
         return 403; # Forbidden
       }
-    route: microservice-namespace/weather-service-vsr
-  - path: /helloworld
-    route: microservice-namespace/echo-service-vsr
----
-apiVersion: k8s.nginx.org/v1
-kind: VirtualServerRoute
-metadata:
-  name: weather-service-vsr
-  namespace: microservice-namespace
-spec:
-  host: localhost
-  upstreams:
-  - name: weather-service-upstream 
-    service: weather-service
-    port: 3000
-    lb-method: round_robin
-    max-fails: 1
-    max-conns: 32
-    keepalive: 32
-    connect-timeout: 30s
-    read-timeout: 30s
-    send-timeout: 30s
-    next-upstream: "error timeout non_idempotent"
-    next-upstream-timeout: 5s
-    next-upstream-tries: 10
-    client-max-body-size: 1m
-  subroutes:
-  - path: /weather
     matches:
     - conditions:
       - variable: $request_method
         value: GET
       action:
-        pass: weather-service-upstream 
+        pass: weather-service-upstream
     action:
       return:
         code: 405
         type: application/json
         body: '{\"status\":405,\"message\":\"Hiya,Method you requested is not allowed\"} \n'
----
-apiVersion: k8s.nginx.org/v1
-kind: VirtualServerRoute
-metadata:
-  name: echo-service-vsr
-  namespace: microservice-namespace
-spec:
-  host: localhost
-  upstreams:
-  - name: echo-service-upstream 
-    service: echo-service
-    port: 8080
-    lb-method: round_robin
-    max-fails: 1
-    max-conns: 32
-    keepalive: 32
-    connect-timeout: 30s
-    read-timeout: 30s
-    send-timeout: 30s
-    next-upstream: "error timeout non_idempotent"
-    next-upstream-timeout: 5s
-    next-upstream-tries: 10
-    client-max-body-size: 1m
-  subroutes:
   - path: /helloworld
     matches:
-    - conditions:
-      - variable: $request_method
-        value: GET
-      action:
-        pass: echo-service-upstream
+      - conditions:
+        - variable: $request_method
+          value: GET
+        action:
+          pass: echo-service-upstream
     action:
       return:
         code: 405
