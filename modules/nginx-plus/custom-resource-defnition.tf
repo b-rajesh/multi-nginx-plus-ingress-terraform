@@ -15,9 +15,9 @@ resource "null_resource" "create_virtual_route_in_edge_proxy" {
   }
 }
 
-resource "null_resource" "create_virtual_route_in_micro_proxy" {
-  depends_on = [null_resource.create_virtual_route_in_edge_proxy, kubernetes_config_map.micro_proxy_server_config_map,kubernetes_namespace.microservice-namespace]
+resource "null_resource" "create_app_protect_policies_in_edge_proxy" {
+  depends_on = [null_resource.cluster, kubernetes_namespace.nginx-plus-ingress-ns, kubernetes_namespace.microservice-namespace]
   provisioner "local-exec" {
-    command = "kubectl apply -f  ${path.module}/microproxy_virtualroute_crd/ --validate=false"
+    command = "kubectl apply -f ${path.module}/app_protect_policies/ --validate=false"
   }
 }
