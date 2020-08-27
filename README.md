@@ -9,6 +9,8 @@ Install Terraform   - <0.12>
 Download the license key nginx-repo.crt & nginx-repo.key from the F5 portal and place it the root directory.
 
 ```
+# High level Architecture for Multi-Ingress Controller 
+![alt text](docs/Multi-Ingress-Detail.png)
 # To install GKE cluster and run NGINX Plus Ingress Controller & Prometheus 
 [Refer GKE installation doc](docs/gke.md)
 
